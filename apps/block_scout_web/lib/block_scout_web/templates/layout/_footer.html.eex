@@ -1,0 +1,121 @@
+<footer class="footer">
+  <div class="footer-body container">
+    
+    
+
+    
+    
+
+    <div class="row">
+      <div class="col-xs-12 col-lg-6">
+       
+         <%= if logo_footer() do %>
+            <img  src="/images/footer-logo.png" alt="<%= subnetwork_title() %>" height="28"/>
+          <% end %>
+          <div class="footer-social-icons">
+            <a href="https://twitter.com/scolcoin" rel="noreferrer" target="_blank" class="footer-social-icon" title='<%= gettext("Twitter") %>'>
+                <div class="footer-social-icon-container"><img src="/images/twitter.png"></div>
+            </a>
+            <a href="https://www.youtube.com/channel/UCOlpGKNsuCGMEe7GLqnFR3g" rel="noreferrer" target="_blank" class="footer-social-icon" title='<%= gettext("Youtube") %>'>
+                <div class="footer-social-icon-container"><img src="/images/youtube.png"></div>
+            </a>
+            <a href="https://t.me/scolcoin" rel="noreferrer" target="_blank" class="footer-social-icon" title='<%= gettext("Telegram") %>'>
+                <div class="footer-social-icon-container"><img src="/images/telegram.png"></div>
+            </a>
+            <a href="https://www.facebook.com/Socialprojectscol" rel="noreferrer" target="_blank" class="footer-social-icon" title='<%= gettext("Facebook") %>'>
+                <div class="footer-social-icon-container"><img src="/images/facebook.png"></div>
+            </a>
+            <a href="https://medium.com/@scolcoin_337" rel="noreferrer" target="_blank" class="footer-social-icon" title='<%= gettext("Medium") %>'>
+                <div class="footer-social-icon-container"><img src="/images/medium.png"></div>
+            </a>
+            <a href="https://discord.gg/emr8T6Ascm" rel="noreferrer" target="_blank" class="footer-social-icon" title='<%= gettext("Discord") %>'>
+                <div class="footer-social-icon-container"><img src="/images/discord.png"></div>
+            </a>
+            <a href="https://www.instagram.com/scolcoin/" rel="noreferrer" target="_blank" class="footer-social-icon" title='<%= gettext("Instagram") %>'>
+                <div class="footer-social-icon-container"><img src="/images/instagram.png"></div>
+            </a>
+            <a href="https://www.reddit.com/r/Scolcoin" rel="noreferrer" target="_blank" class="footer-social-icon" title='<%= gettext("Reddit") %>'>
+                <div class="footer-social-icon-container"><img src="/images/reddit.png"></div>
+            </a>
+        </div>
+      </div>
+
+     
+      <div class="col-xs-12 col-lg-6">
+        <button type="button" class="btn-dark float-right" onclick="addNetwork('web3');">
+          <img class="mr-1" width="15" src="/images/metamask.svg" alt="Metamask"> Add Scolcoin Network
+      </button>
+      </div>
+      <div class="col-xs-12 col-lg-12">
+         
+      </div>
+  </div>
+</footer>
+<script src="/js/web3-utils.min.js"></script>
+<script src="/js/web3-eth.min.js"></script>
+<script src="/js/web3-providers-http.min.js"></script>
+<script type="text/javascript">
+        var eth;
+        var isTestnet = 'false';
+
+        async function addNetwork(type) {
+            
+            if (type === 'web3') {
+                if (typeof ethereum !== 'undefined') {
+                    eth = new Web3Eth(ethereum);
+                } else if (typeof web3 !== 'undefined') {
+                    eth = new Web3Eth(web3.givenProvider);
+                } else {
+                    eth = new Web3Eth(ethereum);
+                }                
+            }            
+
+            if (typeof eth !== 'undefined') {
+                var network = 0;
+                network = await eth.net.getId();
+                netID = network.toString();
+                var params;
+                if (isTestnet == "false") {
+                    if (netID == "65450") {
+                        alert("SCOL Network has already been added to Metamask.");
+                        return;
+                    } else {
+                        params = [{
+                            chainId: '0xFFAA',
+                            chainName: 'Scolcoin Chain Mainnet',
+                            nativeCurrency: {
+                                name: 'SCOLCOIN',
+                                symbol: 'SCOL',
+                                decimals: 18
+                            },
+                            rpcUrls: ['https://mainnet-rpc.scolcoin.com/'],
+                            blockExplorerUrls: ['https://explorer.scolcoin.com/']
+                        }]
+                    }
+                } else {
+                    if (netID == "6552") {
+                        alert("SCOL Test Network has already been added to Metamask."); 
+                        return;
+                    } else {
+                        params = [{
+                            chainId: '0x1998',
+                            chainName: 'Scolcoin Chain Testnet',
+                            nativeCurrency: {
+                                name: 'SCOLCOIN',
+                                symbol: 'SCOL',
+                                decimals: 18
+                            },
+                            rpcUrls: ['https://testnet-rpc.scolcoin.com/'],
+                            blockExplorerUrls: ['https://testnet-explorer.scolcoin.com/']
+                        }]
+                    }
+                }
+
+                window.ethereum.request({ method: 'wallet_addEthereumChain', params })
+                    .then(() => console.log('Success'))
+                    .catch((error) => console.log("Error", error.message));
+            } else {
+                alert('Unable to locate a compatible web3 browser!');
+            }
+        }
+    </script>
